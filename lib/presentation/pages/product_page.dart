@@ -1,4 +1,4 @@
-import 'package:atividade4/domain/entities/product.dart';
+import 'package:atividade4/presentation/viewmodels/product_state.dart';
 import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +11,23 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Produtos')),
-      body: ValueListenableBuilder<List<Product>>(
-        valueListenable: viewModel.products,
-        builder: (context, products, child) {
-          if (products.isEmpty) {
+      body: ValueListenableBuilder<ProductState>(
+        valueListenable: viewModel.state,
+        builder: (context, state, child) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.error != null) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(state.error!, textAlign: TextAlign.center),
+              ),
+            );
+          }
+
+          if (state.products.isEmpty) {
             return const Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
@@ -28,10 +41,10 @@ class ProductPage extends StatelessWidget {
 
           return ListView.separated(
             padding: const EdgeInsets.all(16),
-            itemCount: products.length,
+            itemCount: state.products.length,
             separatorBuilder: (context, index) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = state.products[index];
 
               return Card(
                 child: ListTile(

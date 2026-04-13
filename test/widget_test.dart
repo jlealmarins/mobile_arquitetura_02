@@ -25,6 +25,7 @@ void main() {
     await viewModel.loadProducts();
 
     await tester.pumpWidget(MyApp(viewModel: viewModel));
+    await tester.pumpAndSettle();
 
     expect(find.text('Produtos'), findsOneWidget);
     expect(find.text('Notebook Gamer'), findsOneWidget);

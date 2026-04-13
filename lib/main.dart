@@ -1,4 +1,5 @@
 import 'package:atividade4/core/network/app_http_client.dart';
+import 'package:atividade4/data/datasources/product_cache_datasource.dart';
 import 'package:atividade4/data/datasources/product_remote_datasource.dart';
 import 'package:atividade4/data/repositories/product_repository_impl.dart';
 import 'package:atividade4/presentation/pages/product_page.dart';
@@ -7,8 +8,9 @@ import 'package:flutter/material.dart';
 
 void main() {
   final client = AppHttpClient();
-  final datasource = ProductRemoteDatasource(client);
-  final repository = ProductRepositoryImpl(datasource);
+  final remoteDatasource = ProductRemoteDatasource(client);
+  final cacheDatasource = ProductCacheDatasource();
+  final repository = ProductRepositoryImpl(remoteDatasource, cacheDatasource);
   final viewModel = ProductViewModel(repository);
 
   viewModel.loadProducts();
