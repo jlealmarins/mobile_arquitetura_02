@@ -1,0 +1,76 @@
+import 'package:atividade4/domain/entities/product.dart';
+import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
+import 'package:flutter/material.dart';
+
+class ProductPage extends StatelessWidget {
+  final ProductViewModel viewModel;
+
+  const ProductPage({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Produtos')),
+      body: ValueListenableBuilder<List<Product>>(
+        valueListenable: viewModel.products,
+        builder: (context, products, child) {
+          if (products.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text(
+                  'Nenhum produto carregado.\nToque no botao para buscar da API.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: products.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final product = products[index];
+
+              return Card(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      product.image,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 64,
+                          height: 64,
+                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.image_not_supported_outlined),
+                        );
+                      },
+                    ),
+                  ),
+                  title: Text(
+                    product.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text('R\$ ${product.price.toStringAsFixed(2)}'),
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: viewModel.loadProducts,
+        icon: const Icon(Icons.download),
+        label: const Text('Carregar'),
+      ),
+    );
+  }
+}
