@@ -1,27 +1,15 @@
-import 'package:atividade4/core/network/app_http_client.dart';
-import 'package:atividade4/data/datasources/product_cache_datasource.dart';
-import 'package:atividade4/data/datasources/product_remote_datasource.dart';
-import 'package:atividade4/data/repositories/product_repository_impl.dart';
-import 'package:atividade4/presentation/pages/home_page.dart';
-import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
+import 'package:atividade4/screens/home_screen.dart';
+import 'package:atividade4/services/product_service.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  final client = AppHttpClient();
-  final remoteDatasource = ProductRemoteDatasource(client);
-  final cacheDatasource = ProductCacheDatasource();
-  final repository = ProductRepositoryImpl(remoteDatasource, cacheDatasource);
-  final viewModel = ProductViewModel(repository);
-
-  viewModel.loadProducts();
-
-  runApp(MyApp(viewModel: viewModel));
+  runApp(MyApp(productService: ProductService()));
 }
 
 class MyApp extends StatelessWidget {
-  final ProductViewModel viewModel;
+  final ProductService productService;
 
-  const MyApp({super.key, required this.viewModel});
+  const MyApp({super.key, required this.productService});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: HomePage(viewModel: viewModel),
+      home: HomeScreen(productService: productService),
     );
   }
 }

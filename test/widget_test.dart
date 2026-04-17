@@ -1,13 +1,12 @@
-import 'package:atividade4/domain/entities/product.dart';
-import 'package:atividade4/domain/repositories/product_repository.dart';
 import 'package:atividade4/main.dart';
-import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
+import 'package:atividade4/models/product.dart';
+import 'package:atividade4/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class FakeProductRepository implements ProductRepository {
+class FakeProductService extends ProductService {
   @override
-  Future<List<Product>> getProducts() async {
+  Future<List<Product>> fetchProducts() async {
     return const [
       Product(
         id: 1,
@@ -19,16 +18,26 @@ class FakeProductRepository implements ProductRepository {
       ),
     ];
   }
+
+  @override
+  Future<Product> addProduct(Product product) async {
+    return product.copyWith(id: 2);
+  }
+
+  @override
+  Future<Product> updateProduct(Product product) async {
+    return product;
+  }
+
+  @override
+  Future<void> deleteProduct(String id) async {}
 }
 
 void main() {
   testWidgets('navega da tela inicial aos detalhes do produto', (
     WidgetTester tester,
   ) async {
-    final viewModel = ProductViewModel(FakeProductRepository());
-    await viewModel.loadProducts();
-
-    await tester.pumpWidget(MyApp(viewModel: viewModel));
+    await tester.pumpWidget(MyApp(productService: FakeProductService()));
     await tester.pumpAndSettle();
 
     expect(find.text('Inicio'), findsOneWidget);
@@ -40,7 +49,7 @@ void main() {
     expect(find.text('Produtos'), findsOneWidget);
     expect(find.text('Notebook Gamer'), findsOneWidget);
     expect(find.text('R\$ 5999.90'), findsOneWidget);
-    expect(find.byIcon(Icons.download), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsOneWidget);
 
     await tester.tap(find.text('Notebook Gamer'));
     await tester.pumpAndSettle();
