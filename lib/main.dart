@@ -2,7 +2,7 @@ import 'package:atividade4/core/network/app_http_client.dart';
 import 'package:atividade4/data/datasources/product_cache_datasource.dart';
 import 'package:atividade4/data/datasources/product_remote_datasource.dart';
 import 'package:atividade4/data/repositories/product_repository_impl.dart';
-import 'package:atividade4/presentation/pages/product_page.dart';
+import 'package:atividade4/presentation/pages/home_page.dart';
 import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: ProductPage(viewModel: viewModel),
+      home: HomePage(viewModel: viewModel),
     );
   }
 }

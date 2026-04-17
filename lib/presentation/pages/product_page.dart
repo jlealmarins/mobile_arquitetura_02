@@ -1,3 +1,4 @@
+import 'package:atividade4/presentation/pages/product_detail_page.dart';
 import 'package:atividade4/presentation/viewmodels/product_state.dart';
 import 'package:atividade4/presentation/viewmodels/product_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,16 @@ class ProductPage extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text('R\$ ${product.price.toStringAsFixed(2)}'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProductDetailPage(product: product),
+                      ),
+                    );
+                  },
                 ),
               );
             },
